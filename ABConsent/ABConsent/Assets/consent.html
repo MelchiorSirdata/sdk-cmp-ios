@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
+    <script type="text/javascript" src="https://cache.consentframework.com/js/pa/38620/c/H2HDd/stub"></script>
+    <script type="text/javascript" src="https://choices.consentframework.com/js/pa/38620/c/H2HDd/cmp" async></script>
+    <script type="text/javascript">
+        // Fonction pour communiquer avec l'app native
+        function sendToApp(action, data) {
+            try {
+                window.webkit.messageHandlers.abConsentHandler.postMessage({
+                    action: action,
+                    data: data
+                });
+            } catch (e) {
+                console.error("Failed to send message to app", e);
+            }
+        }
+        
+        // Écouter les événements de la CMP
+        window.__tcfapi('addEventListener', 2, function(tcData, success) {
+            if (success) {
+                // Envoyer les données de consentement à l'app
+                sendToApp('consentUpdate', tcData);
+                
+                // Si l'utilisateur a fait son choix, on peut fermer la CMP
+                if (tcData.eventStatus === 'useractioncomplete') {
+                    sendToApp('userActionComplete', tcData);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- La CMP sera chargée ici -->
+</body>
+</html>
